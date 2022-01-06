@@ -32,7 +32,7 @@ pipeline {
                         options: [
                             fastForwardMode: 'NO_FF',
                             mergeRemote: 'origin',
-                            mergeTarget: "${merge_to}"
+                            mergeTarget: "$CHANGE_TARGET"
                         ]
                     ])
 

@@ -27,25 +27,36 @@ pipeline {
                             url: "${repo_url}"
                         ]]
                     ]
+
+                    scm_definition.extensions.push([$class: 'PreBuildMerge',
+                        options: [
+                            fastForwardMode: 'NO_FF',
+                            mergeRemote: 'origin',
+                            mergeTarget: "${merge_to}"
+                        ]
+                    ])
+
                     vars = checkout changelog: false,
                         poll: false,
                         scm: scm_definition
                     
-                    bat """
-                    git log --oneline --all
-                    """
                     } } // script, steps
                 } // stage Clone Repo
 
                 stage("Merge to master") {
-                    steps { script {
-                        bat """
-                        SET
-                        git fetch
-                        git checkout origin/%CHANGE_TARGET%
-                        git merge origin/%CHANGE_BRANCH%
-                        """
-                    } } // script, steps
+                    steps {
+                        script {
+                            bat "git log --oneline --all --decorate"
+                        /*
+                            bat """
+                            SET
+                            git fetch
+                            git checkout origin/%CHANGE_TARGET%
+                            git merge origin/%CHANGE_BRANCH%
+                            """
+                        */
+                        } // script
+                    } // steps
                 }
             } // inner stages
         } // stage OVerall

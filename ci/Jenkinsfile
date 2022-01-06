@@ -1,0 +1,64 @@
+pipeline {
+    agent { label "_runner:linux" }
+
+    stages {
+        stage("Overall") {
+            agent { label "Build_Slave" }
+
+            stages {
+                stage("Clone repo") {
+                    steps { script {
+                    branch_name = "test-merge-over-10-commits"
+                    repo_url = "https://github.com/taikedzierski-ldx/mbp-testbed"
+
+                    def scm_definition = [$class: 'GitSCM',
+                        branches: [[name: "${branch_name}"]],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [
+                            [$class: 'CloneOption',
+                                noTags: false,
+                                shallow: false,
+                                timeout: 20
+                            ],
+                            [$class: 'CheckoutOption', timeout: 15]
+                        ],
+                        submoduleCfg: [],
+                        userRemoteConfigs: [[
+                            url: "${repo_url}"
+                        ]]
+                    ]
+
+                    scm_definition.extensions.push([$class: 'PreBuildMerge',
+                        options: [
+                            fastForwardMode: 'NO_FF',
+                            mergeRemote: 'origin',
+                            mergeTarget: "$CHANGE_TARGET"
+                        ]
+                    ])
+
+                    vars = checkout changelog: false,
+                        poll: false,
+                        scm: scm_definition
+                    
+                    } } // script, steps
+                } // stage Clone Repo
+
+                stage("Merge to master") {
+                    steps {
+                        script {
+                            bat "git log --oneline --all --decorate"
+                        /*
+                            bat """
+                            SET
+                            git fetch
+                            git checkout origin/%CHANGE_TARGET%
+                            git merge origin/%CHANGE_BRANCH%
+                            """
+                        */
+                        } // script
+                    } // steps
+                }
+            } // inner stages
+        } // stage OVerall
+    } // stages
+} // pipeline

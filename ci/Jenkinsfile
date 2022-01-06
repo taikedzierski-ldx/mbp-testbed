@@ -41,7 +41,7 @@ pipeline {
                         SET
                         git fetch
                         git checkout origin/%CHANGE_TARGET%
-                        git merge origin/master
+                        git merge origin/%CHANGE_BRANCH%
                         """
                     } } // script, steps
                 }

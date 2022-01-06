@@ -1,4 +1,6 @@
 pipeline {
+    agent { label "_runner:linux" }
+
     stages {
         stage("Overall") {
             agent { label "Build_Slave" }

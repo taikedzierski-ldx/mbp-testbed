@@ -1,0 +1,23 @@
+pipeline {
+    agent { label "_runner:linux" }
+
+    stages {
+        stage("Overall") {
+            agent { label "_runner:linux" }
+
+            stages {
+                stage("Clone repo") {
+                    steps { script {
+                        branch_name = "$BRANCH_NAME"
+                        repo_url = "https://github.com/taikedzierski-ldx/mbp-testbed"
+
+                        sh "echo true; true"
+                        sh "echo false; false"
+                        sh "echo true again; true"
+
+                    } } // script, steps
+                } // stage Clone Repo
+            } // inner stages
+        } // stage OVerall
+    } // stages
+} // pipeline

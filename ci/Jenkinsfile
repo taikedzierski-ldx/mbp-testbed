@@ -17,11 +17,15 @@ pipeline {
                 stage("Parallelised") {
                     parallel {
                         stage("Parallel 1") {
-                            tk_say text: "parallel 1"
+                            steps {
+                                tk_say text: "parallel 1"
+                            }
                         }
 
                         stage("Parallel 2") {
-                            tk_say text: "parallel 2"
+                            steps {
+                                tk_say text: "parallel 2"
+                            }
                         }
                     }
                 } // stage Clone Repo

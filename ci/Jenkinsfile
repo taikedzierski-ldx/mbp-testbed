@@ -1,3 +1,11 @@
+PROJECT_REPO='https://github.com/taikedzierski-ldx/mbp-testbed'
+
+library identifier: "commonlib@${BRANCH_NAME}",
+    retriever: modernSCM([
+      $class: 'GitSCMSource',
+      remote: PROJECT_REPO
+])
+
 pipeline {
     agent { label "_runner:linux" }
 
@@ -6,16 +14,16 @@ pipeline {
             agent { label "_runner:linux" }
 
             stages {
-                stage("Clone repo") {
-                    steps { script {
-                        branch_name = "$BRANCH_NAME"
-                        repo_url = "https://github.com/taikedzierski-ldx/mbp-testbed"
+                stage("Parallelised") {
+                    parallel {
+                        stage("Parallel 1") {
+                            tk_say text: "parallel 1"
+                        }
 
-                        sh "echo true; true"
-                        sh "echo false; false"
-                        sh "echo true again; true"
-
-                    } } // script, steps
+                        stage("Parallel 2") {
+                            tk_say text: "parallel 2"
+                        }
+                    }
                 } // stage Clone Repo
             } // inner stages
         } // stage OVerall

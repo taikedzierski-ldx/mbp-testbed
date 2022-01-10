@@ -26,7 +26,9 @@ pipeline {
 
                         stage("Parallel 2") {
                             steps {
+                                timeout time: 5, unit: "SECONDS"
                                 tk_say text: "parallel 2"
+                                sleep time: 10, unit: "SECONDS"
                             }
                         }
                     }

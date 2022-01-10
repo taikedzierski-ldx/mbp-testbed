@@ -18,7 +18,9 @@ pipeline {
                     parallel {
                         stage("Parallel 1") {
                             steps {
-                                tk_say text: "parallel 1"
+                                dir(".") {
+                                    tk_say text: "parallel 1", shell: true
+                                }
                             }
                         }
 

@@ -1,4 +1,9 @@
 def call(Map args) {
     def text = args.getOrDefault("text", "[not supplied]")
-    println "I was told to tell you in turn: ${text}"
+
+    if(args.getOrDefault("shell", false)) {
+        sh "echo From shell: $text"
+    } else {
+        println "I was told to tell you in turn: ${text}"
+    }
 }

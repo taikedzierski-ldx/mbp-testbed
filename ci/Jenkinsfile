@@ -6,10 +6,10 @@ def prepare_all_nodes_for_test(agent_label) {
     for (agentName in nodelist) {
         println "Preparing task for " + agentName
 
-        prepared_node_tests[ "${agentName}" ] = {
+        prepared_node_tests[ agentName ] = {
             build job: '/System/Instrument/Development_and_tests/Tai_dev/Single_build_job',
             parameters: [
-                string(name: 'TEST_AGENT_LABEL', value: "${agentName}"),
+                string(name: 'TEST_AGENT_LABEL', value: agentName),
             ]
         }
     }

@@ -7,7 +7,7 @@ def prepare_all_nodes_for_test(agent_label) {
         println "Preparing task for " + agentName
 
         prepared_node_tests[ "${agentName}" ] = {
-            build job: 'Single_build_job',
+            build job: '/System/Instrument/Development_and_tests/Tai dev stuff/Single_build_job',
             parameters: [
                 string(name: 'TEST_AGENT_LABEL', value: "${agentName}"),
             ]

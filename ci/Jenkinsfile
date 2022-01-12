@@ -1,14 +1,16 @@
 prepared_node_tests = [:]
+known_targets = ["maxim-ci-e2-s008", "maxim-ci-ldx2-s009", "maxim-ci-ldx2-s010"]
 
 def prepare_all_nodes_for_test(agent_label) {
     def nodelist = nodesByLabel(label: "${agent_label}")
 
-    for (agentName in nodelist) {
+    //for (agentName in nodelist) {
+    for (agentName in known_targets) {
         agentName = (String) agentName
 
         println "Preparing task for " + agentName
         print "Content check: "
-        println ((String) ["maxim-ci-ldx2-s008", "maxim-ci-ldx2-s009", "maxim-ci-ldx2-s010"].contains(agentName))
+        println ((String) known_targets.contains(agentName))
 
         prepared_node_tests[ agentName ] = {
             build job: '/System/Instrument/Development_and_tests/Tai_dev/Single_build_job',

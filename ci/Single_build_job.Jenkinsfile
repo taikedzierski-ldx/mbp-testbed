@@ -6,7 +6,7 @@ pipeline {
     }
 
     stages {
-        stage {
+        stage("Run on agent") {
             agent { label params.TEST_AGENT_LABEL }
 
             steps {

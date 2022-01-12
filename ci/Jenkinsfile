@@ -1,0 +1,33 @@
+prepared_node_tests = [:]
+
+def prepare_all_nodes_for_test(agent_label) {
+    def nodelist = nodesByLabel(label: "${agent_label}")
+
+    for (agentName in nodelist) {
+        println "Preparing task for " + agentName
+
+        prepared_node_tests[ "${agentName}" ] = {
+            build job: 'Single_build_job',
+            parameters: [
+                string(name: 'TEST_AGENT_LABEL', value: "${agentName}"),
+            ]
+        }
+    }
+}
+
+
+pipeline {
+    agent { label "_runner:linux" }
+
+    stages {
+        stage('Kick-off agents') {
+            steps {
+                script {
+                    prepare_all_nodes_for_test("_ldx2_")
+                    parallel prepared_node_tests
+                }
+            }
+        }
+    }
+}
+

@@ -4,6 +4,8 @@ def prepare_all_nodes_for_test(agent_label) {
     def nodelist = nodesByLabel(label: "${agent_label}")
 
     for (agentName in nodelist) {
+        agentName = (String) agentName
+
         println "Preparing task for " + agentName
 
         prepared_node_tests[ agentName ] = {

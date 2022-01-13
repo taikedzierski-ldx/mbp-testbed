@@ -1,0 +1,25 @@
+PROJECT_REPO='https://github.com/taikedzierski-ldx/mbp-testbed'
+
+library identifier: "commonlib@${BRANCH_NAME}",
+    retriever: modernSCM([
+      $class: 'GitSCMSource',
+      remote: PROJECT_REPO
+])
+
+pipeline {
+    agent { label "_runner:linux" }
+
+    stages {
+        stage("Overall") {
+            agent { label "_runner:linux" }
+
+            stages {
+                stage("Parallelised") {
+                    parallel {
+                        run_tests
+                    }
+                } // stage Clone Repo
+            } // inner stages
+        } // stage OVerall
+    } // stages
+} // pipeline

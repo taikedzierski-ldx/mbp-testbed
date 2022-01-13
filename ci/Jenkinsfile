@@ -1,6 +1,6 @@
 PROJECT_REPO='https://github.com/taikedzierski-ldx/mbp-testbed'
 
-library identifier: "commonlib@${BRANCH_NAME}",
+library identifier: "commonlib@${CHANGE_NAME}",
     retriever: modernSCM([
       $class: 'GitSCMSource',
       remote: PROJECT_REPO

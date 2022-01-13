@@ -20,7 +20,7 @@ pipeline {
                             run_tests name: "parallel_1", sequence: ["a", "b"], target: "_runner:linux"
                         }} // stage, step
 
-                        stage("Run parallel 2") {
+                        stage("Run parallel 2") { steps {
                             run_tests name: "parallel_2", sequence: ["c", "d"], target: "_runner:linux"
                         }} // stage, step
                     }

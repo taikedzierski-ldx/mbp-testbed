@@ -7,6 +7,16 @@ library identifier: "commonlib@${BRANCH_NAME}",
 ])
 
 pipeline {
+
+
+    options {
+        // If a job in a parallel area fails, fail all other parallel branches immediately
+        parallelsAlwaysFailFast()
+
+        // During an `agent` directive, a full repo checkout can be performed.
+        // This step prevents that from happening as we want to control the checkout location
+        skipDefaultCheckout()
+    }
     agent { label "_runner:linux" }
 
     stages {

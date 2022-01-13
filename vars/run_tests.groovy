@@ -1,15 +1,13 @@
 def call(Map opts) {
-    stages = [
-        stage("Basic tests") {
-            steps {
-                println "Basic"
-            }
-        },
+    name = opts.get("name")
+    sequence = opts.get("sequence")
+    target = opts.get("node")
 
-        stage("Next step") {
-            steps {
-                println "Next"
+    run_sequence = node(label: target) {
+        sequence.each { seq ->
+            stage("Run $seq") {
+                echo "Running: $seq"
             }
         }
-    ]
+    }
 }

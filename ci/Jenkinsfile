@@ -16,7 +16,13 @@ pipeline {
             stages {
                 stage("Parallelised") {
                     parallel {
-                        run_tests
+                        stage("Run parallel 1") {
+                            run_tests name: "parallel_1", sequence: ["a", "b"], target: "_runner:linux"
+                        }
+
+                        stage("Run parallel 2") {
+                            run_tests name: "parallel_2", sequence: ["c", "d"], target: "_runner:linux"
+                        }
                     }
                 } // stage Clone Repo
             } // inner stages

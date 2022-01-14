@@ -7,6 +7,7 @@ def call(Map opts) {
         sequence.each { seq ->
             stage("Run $seq") {
                 echo "Running: $seq"
+                sh "env"
             }
         }
     }

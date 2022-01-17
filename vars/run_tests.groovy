@@ -11,6 +11,14 @@ def call(Map opts) {
                 echo "Running: $seq"
                 sh "env"
                 sh "false"
+
+                post {
+                    always {
+                        println "Stashing ..."
+                        stash name: name, includes: "results_*.txt"
+                        println "Stashed."
+                    }
+                }
             }
         }
     }

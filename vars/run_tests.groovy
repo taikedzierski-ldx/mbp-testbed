@@ -6,7 +6,7 @@ def call(Map opts) {
     run_sequence = node(label: target) {
         sequence.each { seq ->
             stage("Run $seq") {
-                catchError {
+                catchError(stageResult: "ERROR") {
                     def result_file = "results_${seq}.txt"
                     echo "Running: $seq"
                     sh "(echo \$HOSTNAME ; env)| tee $result_file"

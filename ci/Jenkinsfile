@@ -44,7 +44,9 @@ pipeline {
                             }
                             post {
                                 always {
+                                    println "Stashing ..."
                                     stash name: "stage2", includes: "results_*.txt"
+                                    println "Stashed."
                                 }
                             }
                         } // stage, step

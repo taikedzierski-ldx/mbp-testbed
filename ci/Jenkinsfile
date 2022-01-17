@@ -53,7 +53,7 @@ pipeline {
                         always {
                             unstash name: "parallel_1"
                             unstash name: "parallel_2"
-                            sh "hostname; pwd; ls"
+                            sh "hostname; pwd; ls -l"
                         }
                     }
                 } // stage Clone Repo

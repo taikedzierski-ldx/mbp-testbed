@@ -31,6 +31,9 @@ pipeline {
                         rm results_*.txt || true
                         ls -l
                         """
+                        // Prevent picking up old stash files
+                        stash name: "parallel_1", excludes: "**"
+                        stash name: "parallel_2", excludes: "**"
                     }
                 }
                 stage("Parallelised") {

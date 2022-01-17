@@ -26,6 +26,15 @@ pipeline {
             stages {
                 stage("Parallelised") {
                     parallel {
+                        stage("Cleanup") {
+                            steps {
+                                sh """
+                                ls -l
+                                rm results_*.txt || true
+                                ls -l
+                                """
+                            }
+                        }
                         stage("Run parallel 1") {
                             steps {
                                 run_tests name: "parallel_1", sequence: ["a", "b"], target: "_ldx2_"

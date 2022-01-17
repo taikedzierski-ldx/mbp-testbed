@@ -1,16 +1,15 @@
 def call(Map opts) {
-    name = opts.get("name")
-    sequence = opts.get("sequence")
-    target = opts.get("node")
+    def name = opts.get("name")
+    def sequence = opts.get("sequence")
+    def target = opts.get("node")
 
     run_sequence = node(label: target) {
         sequence.each { seq ->
             stage("Run $seq") {
                 catchError {
                     def result_file = "results_${seq}.txt"
-                    sh "echo \$HOSTNAME | tee $result_file"
                     echo "Running: $seq"
-                    sh "env"
+                    sh "(echo \$HOSTNAME ; env)| tee $result_file"
                     sh "false"
                 }
 

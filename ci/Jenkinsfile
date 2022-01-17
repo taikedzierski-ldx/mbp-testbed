@@ -28,15 +28,24 @@ pipeline {
                     parallel {
                         stage("Run parallel 1") {
                             steps {
-                                check_content name: "content_1"
+                                run_tests name: "parallel_1", sequence: ["a", "b"], target: "_ldx2_"
                             }
                         } // stage, step
 
                         stage("Run parallel 2") {
                             steps {
-                                check_content name: "content_2"
+                                run_tests name: "parallel_2", sequence: ["c", "d"], target: "_ldx2_"
+
                             }
                         } // stage, step
+                    }
+
+                    post {
+                        always {
+                            unstash name: "parallel_1"
+                            unstash name: "parallel_2"
+                            sh "hostname; pwd; ls"
+                        }
                     }
                 } // stage Clone Repo
             } // inner stages

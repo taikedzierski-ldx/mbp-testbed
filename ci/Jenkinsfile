@@ -30,10 +30,11 @@ pipeline {
                         ls -l
                         rm results_*.txt || true
                         ls -l
+                        touch empty
                         """
                         // Prevent picking up old stash files
-                        stash name: "parallel_1", excludes: "**"
-                        stash name: "parallel_2", excludes: "**"
+                        stash name: "parallel_1", excludes: "**", includes: "empty"
+                        stash name: "parallel_2", excludes: "**", includes: "empty"
                     }
                 }
                 stage("Parallelised") {

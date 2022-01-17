@@ -6,19 +6,17 @@ def call(Map opts) {
     run_sequence = node(label: target) {
         sequence.each { seq ->
             stage("Run $seq") {
-                def result_file = "results_${seq}.txt"
-                sh "echo \$HOSTNAME | tee $result_file"
-                echo "Running: $seq"
-                sh "env"
-                sh "false"
-
-                post {
-                    always {
-                        println "Stashing ..."
-                        stash name: name, includes: "results_*.txt"
-                        println "Stashed."
-                    }
+                catchError {
+                    def result_file = "results_${seq}.txt"
+                    sh "echo \$HOSTNAME | tee $result_file"
+                    echo "Running: $seq"
+                    sh "env"
+                    sh "false"
                 }
+
+                println "Stashing ..."
+                stash name: name, includes: "results_*.txt"
+                println "Stashed."
             }
         }
     }

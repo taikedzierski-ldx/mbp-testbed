@@ -1,0 +1,78 @@
+PROJECT_REPO='https://github.com/taikedzierski-ldx/mbp-testbed'
+
+library identifier: "thislib@${CHANGE_BRANCH}",
+    retriever: modernSCM([
+      $class: 'GitSCMSource',
+      remote: PROJECT_REPO
+])
+
+
+// Import an external shared library
+library identifier: "commonlib@main",
+    retriever: modernSCM([
+      $class: 'GitSCMSource',
+      credentialsId: 'github-ldx-opsbot-pat',
+      remote: "https://github.com/LumiraQuantum/CI-Pipeline-Library"
+])
+
+pipeline {
+
+
+    options {
+        // If a job in a parallel area fails, fail all other parallel branches immediately
+        parallelsAlwaysFailFast()
+
+        // During an `agent` directive, a full repo checkout can be performed.
+        // This step prevents that from happening as we want to control the checkout location
+        skipDefaultCheckout()
+    }
+    agent { label "_runner:linux" }
+
+    stages {
+        stage("Overall") {
+            agent { label "_runner:linux" }
+
+            stages {
+                stage("Cleanup") {
+                    steps {
+                        sh """
+                        ls -l
+                        rm results_*.txt || true
+                        ls -l
+                        touch empty
+                        """
+
+                        // From commonlib
+                        checkout_repo repo_url: PROJECT_REPO,
+                            branch_name: env.CHANGE_BRANCH
+                    }
+                }
+                stage("Parallelised") {
+                    parallel {
+                        stage("Run parallel 1") {
+                            steps {
+                                // From thislib
+                                run_tests name: "parallel_1", sequence: ["a", "b"], target: "_ldx2_"
+                            }
+                        } // stage, step
+
+                        stage("Run parallel 2") {
+                            steps {
+                                run_tests name: "parallel_2", sequence: ["c", "d"], target: "_ldx2_"
+
+                            }
+                        } // stage, step
+                    }
+
+                    post {
+                        always {
+                            unstash name: "parallel_1"
+                            unstash name: "parallel_2"
+                            sh "hostname; pwd; ls -l"
+                        }
+                    }
+                } // stage Clone Repo
+            } // inner stages
+        } // stage OVerall
+    } // stages
+} // pipeline

@@ -1,9 +1,18 @@
 PROJECT_REPO='https://github.com/taikedzierski-ldx/mbp-testbed'
 
-library identifier: "commonlib@${CHANGE_BRANCH}",
+library identifier: "thislib@${CHANGE_BRANCH}",
     retriever: modernSCM([
       $class: 'GitSCMSource',
       remote: PROJECT_REPO
+])
+
+
+// Import an external shared library
+library identifier: "commonlib@main",
+    retriever: modernSCM([
+      $class: 'GitSCMSource',
+      credentialsId: 'github-ldx-opsbot-pat',
+      remote: "https://github.com/LumiraQuantum/CI-Pipeline-Library"
 ])
 
 pipeline {
@@ -32,15 +41,17 @@ pipeline {
                         ls -l
                         touch empty
                         """
-                        // Prevent picking up old stash files
-                        stash name: "parallel_1", excludes: "**", includes: "empty"
-                        stash name: "parallel_2", excludes: "**", includes: "empty"
+
+                        // From commonlib
+                        checkout_repo repo_url: PROJECT_REPO,
+                            branch_name: env.CHANGE_BRANCH
                     }
                 }
                 stage("Parallelised") {
                     parallel {
                         stage("Run parallel 1") {
                             steps {
+                                // From thislib
                                 run_tests name: "parallel_1", sequence: ["a", "b"], target: "_ldx2_"
                             }
                         } // stage, step
